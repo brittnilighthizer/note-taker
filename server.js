@@ -3,6 +3,7 @@
 var fs = require("fs");
 var express = require("express");
 var path = require("path");
+var arr = require("/db/db.json");
 var app = express();
 var PORT = 8080;
 
@@ -15,23 +16,19 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "../11-note-taker/public/notes.html"));
-});
+app.get("/notes", (req, res) => res.json (arr));
 
-app.get(`/api/notes`, function (req, res) {
-    fs.readFile(__dirname + "/db/db.json", "utf8",function (err, data) {
-        if (err) throw err;
-        return data
-    }
-    )
-})
-
-app.post(`/api/notes`, function (req, res) {
-    console.log(res.body)
+app.post(`/api/notes/`, function (req, res) {
+    console.log(req.body);
+    req.body.id = 
+    arr.push(req.body);
     fs.writeFile(__dirname + "/db/db.json", res.body, function (err) {
         if (err) throw err;
     })
+})
+
+app.delete(`/api/notes/:id`, function (req, res) {
+    console.log(req.params.id)
 })
 
 function display404(url, res) {
@@ -45,6 +42,4 @@ function display404(url, res) {
     res.end(myHTML);
 }
 
-app.listen(PORT, function () {
-    console.log("Server is listening on PORT: " + PORT);
-})
+app.listen(PORT, () => (console.log("Server is listening on PORT: " + PORT));
