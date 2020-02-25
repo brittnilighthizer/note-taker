@@ -3,28 +3,32 @@
 var fs = require("fs");
 var express = require("express");
 var path = require("path");
-var arr = require("/db/db.json");
+var arr = require("./db/db.json");
 var app = express();
 var PORT = 8080;
+var util = require("util");
+
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-app.get("/notes", (req, res) => res.json (arr));
+app.get("/notes", (req, res) => res.json(arr));
 
 app.post(`/api/notes/`, function (req, res) {
-    console.log(req.body);
-    req.body.id = 
+    console.log(req);
     arr.push(req.body);
-    fs.writeFile(__dirname + "/db/db.json", res.body, function (err) {
+    console.log(arr)
+    fs.writeFile("./db/db.json", JSON.stringify(arr), function (err) {
         if (err) throw err;
     })
+    res.json(arr)
 })
 
 app.delete(`/api/notes/:id`, function (req, res) {
@@ -42,4 +46,4 @@ function display404(url, res) {
     res.end(myHTML);
 }
 
-app.listen(PORT, () => (console.log("Server is listening on PORT: " + PORT));
+app.listen(PORT, () => (console.log("Server is listening on PORT: " + PORT)));
