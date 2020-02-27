@@ -5,7 +5,7 @@ var express = require("express");
 var path = require("path");
 var arr = require("./db/db.json");
 var app = express();
-var PORT = 8080;
+var PORT = process.env.PORT || 8080;
 var util = require("util");
 
 const readFileAsync = util.promisify(fs.readFile);
